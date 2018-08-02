@@ -1,21 +1,38 @@
 module Players.List exposing (..)
 
-import Html exposing (..)
+import Html exposing (Html, div, table, tbody, td, text, th, thead, tr)
 import Html.Attributes exposing (class)
 import Models exposing (Player)
-import Msgs exposing (..)
+import Msgs exposing (Msg)
+import RemoteData exposing (WebData)
 
 
-view : List Player -> Html Msg
-view players =
+view : WebData (List Player) -> Html Msg
+view response =
     div []
-        [ nav players
-        , list players
+        [ nav
+        , maybeList response
         ]
 
 
-nav : List Player -> Html Msg
-nav player =
+maybeList : WebData (List Player) -> Html Msg
+maybeList response =
+    case response of
+        RemoteData.NotAsked ->
+            text ""
+
+        RemoteData.Loading ->
+            text "Loading..."
+
+        RemoteData.Success players ->
+            list players
+
+        RemoteData.Failure error ->
+            text (toString error)
+
+
+nav : Html Msg
+nav =
     div [ class "clearfix mb2 white bg-black" ]
         [ div [ class "left p2" ] [ text "Players" ] ]
 
@@ -32,8 +49,8 @@ list players =
                     , th [] [ text "Actions" ]
                     ]
                 ]
-            , tbody [] <| List.map playerRow players
             ]
+        , tbody [] (List.map playerRow players)
         ]
 
 
@@ -42,6 +59,6 @@ playerRow player =
     tr []
         [ td [] [ text player.id ]
         , td [] [ text player.name ]
-        , td [] [ text <| toString <| player.name ]
+        , td [] [ text <| toString player.level ]
         , td [] []
         ]

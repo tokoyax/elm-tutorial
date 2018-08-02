@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (Html, div, h1, img, program, text)
+import Html exposing (Html, div, text)
 import Models exposing (Model)
 import Msgs exposing (Msg)
 import Players.List
