@@ -1,10 +1,11 @@
 module Players.List exposing (..)
 
-import Html exposing (Html, div, table, tbody, td, text, th, thead, tr)
-import Html.Attributes exposing (class)
+import Html exposing (Html, a, div, i, table, tbody, td, text, th, thead, tr)
+import Html.Attributes exposing (class, href)
 import Models exposing (Player)
 import Msgs exposing (Msg)
 import RemoteData exposing (WebData)
+import Routing exposing (playerPath)
 
 
 view : WebData (List Player) -> Html Msg
@@ -60,5 +61,18 @@ playerRow player =
         [ td [] [ text player.id ]
         , td [] [ text player.name ]
         , td [] [ text <| toString player.level ]
-        , td [] []
+        , td [] [ editBtn player ]
         ]
+
+
+editBtn : Player -> Html.Html Msg
+editBtn player =
+    let
+        path =
+            playerPath player.id
+    in
+    a
+        [ class "btn regular"
+        , href path
+        ]
+        [ i [ class "fa fapencil mrl" ] [], text "Edit" ]
